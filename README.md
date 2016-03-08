@@ -15,7 +15,8 @@ Compilation
 Usage
 =====
 
-The image is readily available as a Vagrant machine for VirtualBox as `ssaavedra/cavi-art`.
+The image is readily available as a Vagrant machine for VirtualBox as [`ssaavedra/cavi-art`][atlas].
 
 It is also available as an OVA at https://drive.google.com/file/d/0B9pkXRNr2fviUm0wRVp2OXc0WEE/view?usp=sharing
 
+  [atlas]: https://atlas.hashicorp.com/ssaavedra/boxes/cavi-art
