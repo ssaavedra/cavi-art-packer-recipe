@@ -1,0 +1,66 @@
+{
+    "builders": [
+	{
+	    "type": "virtualbox-ovf",
+	    "source_path": "fedora-base.ova",
+	    "guest_additions_mode": "disable",
+	    "ssh_username": "vagrant",
+	    "ssh_password": "vagrant",
+	    "shutdown_command": "echo 'packer' | sudo -S shutdown -P now"
+	},
+	{
+	    "type": "docker",
+	    "image": "fedora:23",
+	    "pull": true,
+	    "commit": false
+	}
+    ],
+
+    "description": "Reference CAVI-ART VA image. Contains Why3 and LiquidHaskell",
+    "post-processors": [
+	{
+	    "type": "vagrant",
+	    "keep_input_artifact": false
+	},
+	{
+	    "type": "atlas",
+	    "artifact": "ssaavedra/cavi-art",
+            "artifact_type": "vagrant.box",
+            "only": ["virtualbox-ovf"],
+            "metadata": {
+                "provider": "virtualbox",
+                "version": "0.0.1"
+            }
+	},
+	{
+	    "type": "atlas",
+	    "artifact": "ssaavedra/cavi-art",
+	    "artifact_type": "vagrant.box",
+            "only": ["docker"],
+            "metadata": {
+                "provider": "docker",
+                "version": "0.0.1"
+            }
+	}
+    ],
+    "provisioners": [
+	{ "type": "shell",
+	  "inline": [
+	      "sudo dnf update -y",
+	      "curl -sSL https://s3.amazonaws.com/download.fpcomplete.com/fedora/23/fpco.repo | sudo tee /etc/yum.repos.d/fpco.repo",
+	      "sudo dnf install -y why3-all coq-coqide xorg-x11-xauth git libstdc++-devel libstdc++-static stack gcc-c++",
+	      "curl 'https://raw.githubusercontent.com/boxcutter/fedora/master/script/cleanup.sh' | sudo tee /usr/local/bin/cleanup.sh",
+	      "why3 config --detect",
+	      "sudo mount -o remount,size=4G -t tmpfs none /tmp",
+	      "stack setup",
+	      "git clone --recursive git://github.com/ucsd-progsys/liquidhaskell.git /home/vagrant/liquidhaskell",
+	      "cd /home/vagrant/liquidhaskell && stack install",
+	      "sudo chmod -v a+x /usr/local/bin/cleanup.sh",
+	      "PKG_MGR=dnf sudo bash /usr/local/bin/cleanup.sh"
+	  ]
+	}
+    ],
+    "variables": {
+	"atlas_token": "{{env `ATLAS_TOKEN`}}"
+    }
+}
