@@ -29,7 +29,7 @@
             "only": ["virtualbox-ovf"],
             "metadata": {
                 "provider": "virtualbox",
-                "version": "0.0.1"
+                "version": "0.0.2"
             }
 	},
 	{
@@ -39,7 +39,7 @@
             "only": ["docker"],
             "metadata": {
                 "provider": "docker",
-                "version": "0.0.1"
+                "version": "0.0.2"
             }
 	}
     ],
@@ -56,7 +56,9 @@
 	      "git clone --recursive git://github.com/ucsd-progsys/liquidhaskell.git /home/vagrant/liquidhaskell",
 	      "cd /home/vagrant/liquidhaskell && stack install",
 	      "sudo chmod -v a+x /usr/local/bin/cleanup.sh",
+	      "echo 'PATH=$HOME/.local/bin:$PATH' >> $HOME/.bashrc",
 	      "PKG_MGR=dnf sudo bash /usr/local/bin/cleanup.sh"
+
 	  ]
 	}
     ],
